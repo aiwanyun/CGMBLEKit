@@ -490,7 +490,7 @@ extension CalibrationState {
                 return LocalizedString("传感器正在变暖", comment: "The description of sensor calibration state when sensor sensor is warming up.")
             }
         case .unknown(let rawValue):
-            return String(format: LocalizedString("Sensor is in unknown state %1$d", comment: "The description of sensor calibration state when raw value is unknown. (1: missing data details)"), rawValue)
+            return String(format: LocalizedString("传感器处于未知状态 %1$d", comment: "The description of sensor calibration state when raw value is unknown. (1: missing data details)"), rawValue)
         }
     }
 }
