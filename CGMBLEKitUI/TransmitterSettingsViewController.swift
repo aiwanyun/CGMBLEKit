@@ -153,14 +153,22 @@ class TransmitterSettingsViewController: UITableViewController {
     
     private lazy var sensorExpirationFullFormatter: DateFormatter = {
         let formatter = DateFormatter()
-        formatter.dateStyle = .full
-        formatter.timeStyle = .short
-        formatter.doesRelativeDateFormatting = true
-        //formatter.dateFormat = "E, MMM d 'at' h:mm a"
+        //formatter.dateStyle = .full
+        //formatter.timeStyle = .short
+        //formatter.doesRelativeDateFormatting = true
+        formatter.setLocalizedDateFormatFromTemplate("E, MMM d, hh:mm")
         return formatter
     }()
     
     private lazy var sensorExpirationRelativeFormatter: DateFormatter = {
+        let formatter = DateFormatter()
+        formatter.dateStyle = .long
+        formatter.timeStyle = .none
+        formatter.doesRelativeDateFormatting = true
+        return formatter
+    }()
+    
+    private lazy var sensorExpirationRelativeFormatterWithTime: DateFormatter = {
         let formatter = DateFormatter()
         formatter.dateStyle = .long
         formatter.timeStyle = .short
@@ -171,7 +179,7 @@ class TransmitterSettingsViewController: UITableViewController {
     private lazy var sensorExpAbsFormatter: DateFormatter = {
         let formatter = DateFormatter()
         formatter.dateStyle = .long
-        formatter.timeStyle = .short
+        formatter.timeStyle = .none
         formatter.doesRelativeDateFormatting = false
         return formatter
     }()
@@ -229,7 +237,7 @@ class TransmitterSettingsViewController: UITableViewController {
                     cell.detailTextLabel?.text = SettingsTableViewCell.NoValueString
                 }
             case .status:
-                cell.textLabel?.text = LocalizedString("地位", comment: "Title describing CGM calibration and battery state")
+                cell.textLabel?.text = LocalizedString("状态", comment: "Title describing CGM calibration and battery state")
 
                 if let stateDescription = glucose?.stateDescription, !stateDescription.isEmpty {
                     cell.detailTextLabel?.text = stateDescription
@@ -306,7 +314,7 @@ class TransmitterSettingsViewController: UITableViewController {
                         if sensorExpirationRelativeFormatter.string(from: sessionExp) == sensorExpAbsFormatter.string(from: sessionExp) {
                             cell.detailTextLabel?.text = sensorExpirationFullFormatter.string(from: sessionExp)
                         } else {
-                            cell.detailTextLabel?.text = sensorExpirationRelativeFormatter.string(from: sessionExp)
+                            cell.detailTextLabel?.text = sensorExpirationRelativeFormatterWithTime.string(from: sessionExp)
                         }
                     } else {
                         cell.detailTextLabel?.text = SettingsTableViewCell.NoValueString
@@ -517,9 +525,9 @@ private extension UIAlertController {
 private extension SettingsTableViewCell {
     func setGlucose(_ glucose: HKQuantity?, formatter: QuantityFormatter, isDisplayOnly: Bool) {
         if isDisplayOnly {
-            textLabel?.text = LocalizedString("葡萄糖（调整后）", comment: "Describes a glucose value adjusted to reflect a recent calibration")
+            textLabel?.text = LocalizedString("血糖（调整后）", comment: "Describes a glucose value adjusted to reflect a recent calibration")
         } else {
-            textLabel?.text = LocalizedString("葡萄糖", comment: "Title describing glucose value")
+            textLabel?.text = LocalizedString("血糖", comment: "Title describing glucose value")
         }
 
         if let quantity = glucose, let formatted = formatter.string(from: quantity) {
